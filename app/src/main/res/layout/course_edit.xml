@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/BsaveCourse"
+            android:onClick="onCourseSaveClick"
+            android:layout_gravity="right"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove Course"
+            android:id="@+id/BdeleteCourse"
+            android:layout_gravity="right"
+            android:onClick="onCourseDeleteClick"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Course Name"
+            android:id="@+id/TVviewCourseNameDetail"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/TFcourseDetailName"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Begin Date"
+            android:id="@+id/TVviewCourseStartDetail"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/TFcourseDetailBeginDate"
+            android:focusable="false"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="End Date"
+            android:id="@+id/TVviewEndDateDetail"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/TFcourseDetailEndDate"
+            android:focusable="false"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Course Status"
+            android:id="@+id/TVcourseStatus"/>
+
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/SPcourseStatus"/>
+
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Begin Reminder"
+            android:id="@+id/beginReminderSwitch"
+            android:checked="false"/>
+
+    <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Reminder"
+            android:id="@+id/endReminderSwitch"
+            android:checked="false"/>
+
+    <ListView
+            android:id="@+id/lvAssessment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1" >
+
+    </ListView>
+
+    <Button android:id="@+id/BnewAssessmentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Course"/>
+
+</LinearLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+        >
+
+    <TextView
+            android:id="@+id/tvId"
+            android:layout_alignBaseline="@+id/ivUserIcon"
+            android:layout_toRightOf="@+id/ivUserIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="6dp"
+            android:text="Term "
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvId"
+            android:layout_toRightOf="@+id/tvId"
+            android:paddingRight="6dp"
+            android:text="  " />
+
+    <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvId"
+            android:layout_toRightOf="@+id/textView2"
+            android:text="TermName"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:id="@+id/ivUserIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+</RelativeLayout>

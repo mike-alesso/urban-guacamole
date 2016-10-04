@@ -1,0 +1,22 @@
+<resources>
+    <string name="appName">WGU Texas</string>
+    <string name="login">LOGIN</string>
+    <string name="emptyString"/>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_up_here">Sign Up Here</string>
+    <string name="welcome">Welcome,</string>
+    <string name="title_activity_navdrawer">WGU Texas</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="course_status_array">
+        <item>In progress</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+        <item>Plan to take</item>
+    </string-array>
+</resources>
