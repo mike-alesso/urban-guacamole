@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.michael.myapplication.Helpers.Database;
 import com.example.michael.myapplication.models.Course;
-import com.example.michael.myapplication.models.Term;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,7 +21,7 @@ import java.util.Locale;
 /**
  * Created by michael on 9/3/16.
  */
-public class CourseDetail extends Fragment {
+public class AssessmentDetail extends Fragment {
 
     View rootView;
     Database helper;

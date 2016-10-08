@@ -47,6 +47,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String ASSESSMENT_COLUMN_DATE = "goal_date";
     private static final String ASSESSMENT_COLUMN_REMINDER = "reminder";
 
+
     private static final String ASSESSMENT_TABLE_CREATE = "create table " + ASSESSMENT_TABLE_NAME +
             "( _id INTEGER PRIMARY KEY, " + ASSESSMENT_COLUMN_NAME + " text not null, " + ASSESSMENT_COLUMN_COURSE_NAME
             + " text not null, " + ASSESSMENT_COLUMN_TYPE + " INTEGER not null, " +

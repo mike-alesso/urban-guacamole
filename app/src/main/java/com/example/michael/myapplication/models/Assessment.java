@@ -7,10 +7,38 @@ import java.util.Date;
  */
 public class Assessment {
     private String assessmentName, courseName;
+    private int courseId;
+    private int termId;
+    private int assessmentId;
+
     public enum AssessmentType {OBJECTIVE, PERFORMANCE}
     private AssessmentType type;
     private Date goalDate;
     private boolean reminder;
+
+    public void setCourseId (int id){
+        this.courseId = id;
+    }
+
+    public int getCourseId () {
+        return this.courseId;
+    }
+
+    public void setTermId (int id){
+        this.termId = id;
+    }
+
+    public int getTermId () {
+        return this.termId;
+    }
+
+    public void setAssessmentId (int id){
+        this.assessmentId = id;
+    }
+
+    public int getAssessmentId () {
+        return this.assessmentId;
+    }
 
     public void setAssessmentName (String name){this.assessmentName = name;}
 
