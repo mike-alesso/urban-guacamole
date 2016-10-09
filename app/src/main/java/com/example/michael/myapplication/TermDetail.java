@@ -106,8 +106,12 @@ public class TermDetail extends Fragment {
             @Override
             public void onClick(View v)
             {
+                Bundle bundle = new Bundle();
+                bundle.putInt("termIndex", id);
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, new CourseDetail());
+                Fragment courseDetailFragment = new CourseDetail();
+                courseDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, courseDetailFragment);
                 ft.commit();
             }
         });
@@ -274,16 +278,20 @@ public class TermDetail extends Fragment {
             }
         });
 
-        Button btn_newCourse = (Button)rootView.findViewById(R.id.BnewcourseButton);
-
-        btn_newCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, new CourseDetail());
-                ft.commit();
-            }
-        });
+//        Button btn_newCourse = (Button)rootView.findViewById(R.id.BnewcourseButton);
+//
+//        btn_newCourse.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("termIndex", termId);
+//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                Fragment courseDetailFragment = new CourseDetail();
+//                courseDetailFragment.setArguments(bundle);
+//                ft.replace(R.id.content_frame, courseDetailFragment);
+//                ft.commit();
+//            }
+//        });
     }
 }

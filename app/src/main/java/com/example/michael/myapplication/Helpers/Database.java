@@ -21,7 +21,7 @@ import java.util.Locale;
  */
 public class Database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "schoolStore.db";
     private static final String TAG = "storeApp";
     SQLiteDatabase db;
@@ -41,28 +41,117 @@ public class Database extends SQLiteOpenHelper {
 
     //Assessment Table
     private static final String ASSESSMENT_TABLE_NAME = "assessment";
+    private static final String ASSESSMENT_COLUMN_COURSE_ID = "course_id";
     private static final String ASSESSMENT_COLUMN_NAME = "name";
-    private static final String ASSESSMENT_COLUMN_COURSE_NAME = "course_name";
     private static final String ASSESSMENT_COLUMN_TYPE = "type";
     private static final String ASSESSMENT_COLUMN_DATE = "goal_date";
     private static final String ASSESSMENT_COLUMN_REMINDER = "reminder";
 
 
-    private static final String ASSESSMENT_TABLE_CREATE = "create table " + ASSESSMENT_TABLE_NAME +
-            "( _id INTEGER PRIMARY KEY, " + ASSESSMENT_COLUMN_NAME + " text not null, " + ASSESSMENT_COLUMN_COURSE_NAME
-            + " text not null, " + ASSESSMENT_COLUMN_TYPE + " INTEGER not null, " +
-            ASSESSMENT_COLUMN_DATE + " text not null, " + ASSESSMENT_COLUMN_REMINDER + " INTEGER text not null);";
+    private static final String ASSESSMENT_TABLE_CREATE =
+            "create table " + ASSESSMENT_TABLE_NAME +
+            "( _id INTEGER PRIMARY KEY, "
+            + ASSESSMENT_COLUMN_COURSE_ID + " INTEGER not null, "
+            + ASSESSMENT_COLUMN_NAME + " text not null, "
+            + ASSESSMENT_COLUMN_TYPE + " INTEGER not null, "
+            + ASSESSMENT_COLUMN_DATE + " text not null, "
+            + ASSESSMENT_COLUMN_REMINDER + " INTEGER text not null);";
 
     public void insertAssessment(Assessment assessment) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(ASSESSMENT_COLUMN_COURSE_ID, assessment.getCourseId());
         values.put(ASSESSMENT_COLUMN_NAME, assessment.getAssessmentName());
-        values.put(ASSESSMENT_COLUMN_COURSE_NAME, assessment.getCourseName());
         values.put(ASSESSMENT_COLUMN_TYPE, assessment.getType().toString());
         values.put(ASSESSMENT_COLUMN_DATE, assessment.getGoalDate().toString());
         values.put(ASSESSMENT_COLUMN_REMINDER, assessment.getReminder());
 
         db.insert(ASSESSMENT_TABLE_NAME, null, values);
+    }
+
+    public void updateAssessment(int assessmentId, String name, String goalDate, boolean goalReminder, Assessment.AssessmentType type) {
+        db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(ASSESSMENT_COLUMN_NAME, name); //These Fields should be your String values of actual column names
+        cv.put(ASSESSMENT_COLUMN_TYPE, type.toString());
+        cv.put(ASSESSMENT_COLUMN_DATE, goalDate); //startDate
+        cv.put(ASSESSMENT_COLUMN_REMINDER, goalReminder);
+
+        int update = db.update(ASSESSMENT_TABLE_NAME, cv, "_id=" + assessmentId, null);
+    }
+
+    public void removeAssessment(int i) {
+        db = this.getWritableDatabase();
+        int delete = db.delete(ASSESSMENT_TABLE_NAME, "_id=" + i, null);
+    }
+
+    public ArrayList<Assessment> getAllAssessments(int courseId) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + ASSESSMENT_COLUMN_COURSE_ID + ", " + ASSESSMENT_COLUMN_NAME + ", " + ASSESSMENT_COLUMN_DATE + ", " + ASSESSMENT_COLUMN_REMINDER  +
+                ", " + ASSESSMENT_COLUMN_TYPE + " from " + ASSESSMENT_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+
+        ArrayList<Assessment> resultList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+
+                Assessment tempAssessment = new Assessment();
+                DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
+                tempAssessment.setAssessmentId(cursor.getInt(0));
+                tempAssessment.setCourseId(cursor.getInt(1));
+                tempAssessment.setAssessmentName(cursor.getString(2));
+                String goalDate = cursor.getString(3);
+                tempAssessment.setReminder(cursor.getInt(4) == 1);
+                tempAssessment.setType(Assessment.AssessmentType.valueOf(cursor.getString(5)));
+                        //Course.Status.valueOf(cursor.getString(5)));
+                //tempCourse.setStartDateReminder(cursor.getInt(5) == 1);
+                //tempCourse.setEndDateReminder(cursor.getInt(6) == 1);
+                Date goalDateParsed = new Date();
+                try {
+                    goalDateParsed = format.parse(goalDate);
+                } catch (ParseException e) {
+                    Log.e(TAG, "Parsing datetime failed", e);
+                }
+                tempAssessment.setGoalDate(goalDateParsed);
+                if (tempAssessment.getCourseId() == courseId) {
+                    resultList.add(tempAssessment);
+                }
+            }
+            while (cursor.moveToNext());
+        }
+        db.close();
+        return resultList;
+    }
+
+    public Assessment GetAssessment(int id) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + ASSESSMENT_COLUMN_NAME + ", " + ASSESSMENT_COLUMN_COURSE_ID + ", " + ASSESSMENT_COLUMN_DATE + ", " + ASSESSMENT_COLUMN_REMINDER + ", " + ASSESSMENT_COLUMN_TYPE + " from " + ASSESSMENT_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Assessment tempAssessment = new Assessment();
+        do{
+            DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
+            tempAssessment.setAssessmentId(cursor.getInt(0));
+            tempAssessment.setAssessmentName(cursor.getString(1));
+            tempAssessment.setCourseId(cursor.getInt(2));
+            String goalDate = cursor.getString(3);
+            tempAssessment.setReminder(cursor.getInt(4) == 1);
+            tempAssessment.setType(Assessment.AssessmentType.valueOf(cursor.getString(5)));
+            Date goalDateParsed = new Date();
+            try{
+                goalDateParsed = format.parse(goalDate);
+            } catch (ParseException e) {
+                Log.e(TAG, "Parsing datetime failed", e);
+            }
+            tempAssessment.setGoalDate(goalDateParsed);
+
+            if(cursor.getInt(0) == id){
+                break;
+            }
+        }
+        while (cursor.moveToNext());
+        db.close();
+        return tempAssessment;
     }
 
     //Course Table
@@ -122,7 +211,6 @@ public class Database extends SQLiteOpenHelper {
         ArrayList<Course> resultList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-
                 Course tempCourse = new Course();
                 DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
                 tempCourse.setCourseId(cursor.getInt(0));
@@ -148,8 +236,9 @@ public class Database extends SQLiteOpenHelper {
                     Log.e(TAG, "Parsing datetime failed", e);
                 }
                 tempCourse.setEndDate(endTimeParsed);
-
-                resultList.add(tempCourse);
+                if (tempCourse.getTermId() == termId) {
+                    resultList.add(tempCourse);
+                }
             }
             while (cursor.moveToNext());
         }

@@ -6,11 +6,20 @@ import java.util.Date;
  * Created by michael on 9/4/16.
  */
 public class Assessment {
-    private String assessmentName, courseName;
-    private int courseId;
-    private int termId;
-    private int assessmentId;
+    public Assessment(int assessmentId, int courseId, String name, Date goalDate, boolean reminder, AssessmentType type) {
+        this.setAssessmentId(assessmentId);
+        this.setCourseId(courseId);
+        this.setAssessmentName(name);
+        this.setGoalDate(goalDate);
+        this.setReminder(reminder);
+        this.setType(type);
+    }
+    //Default constructor
+    public Assessment(){}
 
+    private String assessmentName;
+    private int courseId;
+    private int assessmentId;
     public enum AssessmentType {OBJECTIVE, PERFORMANCE}
     private AssessmentType type;
     private Date goalDate;
@@ -24,14 +33,6 @@ public class Assessment {
         return this.courseId;
     }
 
-    public void setTermId (int id){
-        this.termId = id;
-    }
-
-    public int getTermId () {
-        return this.termId;
-    }
-
     public void setAssessmentId (int id){
         this.assessmentId = id;
     }
@@ -43,10 +44,6 @@ public class Assessment {
     public void setAssessmentName (String name){this.assessmentName = name;}
 
     public String getAssessmentName () {return this.assessmentName;}
-
-    public void setCourseName (String name) {this.courseName = name;}
-
-    public String getCourseName () {return this.courseName;}
 
     public void setType (AssessmentType type){this.type = type;}
 

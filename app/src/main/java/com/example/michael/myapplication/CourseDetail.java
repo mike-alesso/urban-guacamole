@@ -9,15 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.example.michael.myapplication.Helpers.Database;
+import com.example.michael.myapplication.models.Assessment;
 import com.example.michael.myapplication.models.Course;
 import com.example.michael.myapplication.models.Term;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.example.michael.myapplication.R.id.lvAssessment;
 
 /**
  * Created by michael on 9/3/16.
@@ -66,7 +70,7 @@ public class CourseDetail extends Fragment {
                             e.printStackTrace();
                         }
                         try {
-                            endDate = sdf.parse(beginDateTextField.getText().toString());
+                            endDate = sdf.parse(endDateTextField.getText().toString());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -121,6 +125,8 @@ public class CourseDetail extends Fragment {
 
         if ((courseId > 0) && (termId > 0)) populateCourseDetail(courseId);
         else populateEmptyCourse();
+
+        populateAssessmentList(courseId);
 
         return rootView;
     }
@@ -264,5 +270,48 @@ public class CourseDetail extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         endDateTextField.setText(sdf.format(endDateCalendar.getTime()));
+    }
+
+    private void populateAssessmentList(final int courseId) {
+        // Construct the data source
+        helper = new Database(getActivity());
+
+        ArrayList<Assessment> arrayOfAssessments = helper.getAllAssessments(courseId);
+        // Create the adapter to convert the array to views
+        CustomAssessmentAdapter adapter = new CustomAssessmentAdapter(getActivity(), arrayOfAssessments);
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) rootView.findViewById(lvAssessment);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("assessmentIndex", position + 1);
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                //startActivity(newActivity);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment assessmentDetailFragment = new AssessmentDetail();
+                assessmentDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, assessmentDetailFragment);
+                ft.commit();
+            }
+        });
+
+        Button btn_newAssessment = (Button)rootView.findViewById(R.id.BnewAssessmentButton);
+
+        btn_newAssessment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Bundle bundle = new Bundle();
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment assessmentDetailFragment = new AssessmentDetail();
+                assessmentDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, assessmentDetailFragment);
+                ft.commit();
+            }
+        });
     }
 }

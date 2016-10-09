@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:id="@+id/BsaveTerm"
-            android:onClick="onTermSaveClick"
+            android:id="@+id/BsaveAssessment"
+            android:onClick="onAssessmentSaveClick"
             android:layout_gravity="right"/>
 
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remove Term"
-            android:id="@+id/BdeleteTerm"
+            android:text="Remove Assessment"
+            android:id="@+id/BdeleteAssessment"
             android:layout_gravity="right"
-            android:onClick="onTermDeleteClick"/>
+            android:onClick="onAssessmentDeleteClick"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Term Name"
-            android:id="@+id/TVviewNameDetail"
+            android:text="Assessment Name"
+            android:id="@+id/TVviewAssessmentNameDetail"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
 
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/TFtermDetailName"/>
+            android:id="@+id/TFassessmentDetailName"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Begin Date"
-            android:id="@+id/TVviewStartDetail"
+            android:text="Goal Date"
+            android:id="@+id/TVviewAssessmentGoalDetail"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
 
@@ -48,41 +51,35 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
-            android:id="@+id/TFtermDetailBeginDate"
+            android:id="@+id/TFassessmentGoalDate"
             android:focusable="false"/>
 
-    <TextView
+    <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="End Date"
-            android:id="@+id/TVviewEndDateDetail"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"/>
+            android:text="Goal Date Reminder"
+            android:id="@+id/goalReminderSwitch"
+            android:checked="false"/>
 
-    <EditText
-            android:layout_width="match_parent"
+    <Switch
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:id="@+id/TFtermDetailEndDate"
-            android:focusable="false"/>
+            android:text="Assessment Type"
+            android:id="@+id/assessmentTypeSwitch"
+            android:checked="false"/>
 
     <ListView
-            android:id="@+id/lvCourses"
+            android:id="@+id/lvNote"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:layout_height="0dp"
             android:layout_weight="1" >
 
     </ListView>
 
-    <Button android:id="@+id/BnewcourseButton"
+    <Button android:id="@+id/BnewNoteButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Course"/>
+            android:text="New Note"/>
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
