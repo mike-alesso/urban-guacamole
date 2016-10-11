@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Note {
     private int noteId, courseId;
-    private String  noteContent, photo;
+    private String  noteContent, photo, noteName;
 
     public void setCourseId (int courseId) {
         this.courseId = courseId;
@@ -23,6 +23,14 @@ public class Note {
 
     public String getNoteContent() {
         return this.noteContent;
+    }
+
+    public void setNoteName (String noteName) {
+        this.noteName = noteName;
+    }
+
+    public String getNoteName() {
+        return this.noteName;
     }
 
     public void setPhotos(String photo) { this.photo = photo;}

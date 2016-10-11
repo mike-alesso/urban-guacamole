@@ -334,9 +334,20 @@ public class Database extends SQLiteOpenHelper {
         values.put(NOTE_COLUMN_ID, note.getNoteId());
         values.put(NOTE_COLUMN_COURSE_ID, note.getCourseId());
         values.put(NOTE_COLUMN_CONTENT, note.getNoteContent());
-        values.put(NOTE_COLUMN_NAME, note.getCourseName());
+        values.put(NOTE_COLUMN_NAME, note.getNoteName());
         values.put(NOTE_COLUMN_PHOTO, note.getPhoto());
         db.insert(NOTE_TABLE_NAME, null, values);
+    }
+
+    public void updateNote(int noteId, int courseId, String content, String name, String photo) {
+        db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(NOTE_COLUMN_COURSE_ID, courseId); //These Fields should be your String values of actual column names
+        cv.put(NOTE_COLUMN_CONTENT, content); //startDate
+        cv.put(NOTE_COLUMN_NAME, name);
+        cv.put(NOTE_COLUMN_PHOTO, photo);
+
+        int update = db.update(COURSE_TABLE_NAME, cv, "_id=" + noteId, null);
     }
 
     public void removeNote(int i) {
@@ -356,7 +367,7 @@ public class Database extends SQLiteOpenHelper {
                 DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
                 tempNote.setNoteId(cursor.getInt(0));
                 tempNote.setCourseId(cursor.getInt(1));
-                tempNote.setTitle(cursor.getString(2));
+                tempNote.setNoteName(cursor.getString(2));
                 String noteContent = cursor.getString(3);
                 String notePhoto = cursor.getString(4);
                 if (tempNote.getCourseId() == courseId) {
@@ -376,29 +387,11 @@ public class Database extends SQLiteOpenHelper {
         cursor.moveToFirst();
         Note tempNote = new Note();
         do{
-            DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
             tempNote.setNoteId(cursor.getInt(0));
             tempNote.setCourseId(cursor.getInt(1));
-            tempNote.setContent(cursor.getString(2));
-            tempNote.setName(cursor.getString(3));
-            tempNote.setEndDateReminder(cursor.getInt(7) == 1);
-
-            Date startTimeParsed = new Date();
-            try{
-                startTimeParsed = format.parse(startTime);
-            } catch (ParseException e) {
-                Log.e(TAG, "Parsing datetime failed", e);
-            }
-            tempNote.setStartDate(startTimeParsed);
-
-            Date endTimeParsed = new Date();
-            try{
-                endTimeParsed = format.parse(endTime);
-            } catch (ParseException e) {
-                Log.e(TAG, "Parsing datetime failed", e);
-            }
-            tempNote.setEndDate(endTimeParsed);
-
+            tempNote.setNoteContent(cursor.getString(2));
+            tempNote.setNoteName(cursor.getString(3));
+            tempNote.setPhotos(cursor.getString(4));
             if(cursor.getInt(0) == id){
                 break;
             }
@@ -507,7 +500,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(COURSE_TABLE_CREATE);
         db.execSQL(CM_TABLE_CREATE);
         db.execSQL(NOTE_TABLE_CREATE);
-        db.execSQL(PHOTO_TABLE_CREATE);
+        //db.execSQL(PHOTO_TABLE_CREATE);
         db.execSQL(TERM_TABLE_CREATE);
         this.db = db;
     }
@@ -524,8 +517,8 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(query4);
         String query5 = "DROP TABLE IF EXISTS " + NOTE_TABLE_NAME;
         db.execSQL(query5);
-        String query6 = "DROP TABLE IF EXISTS " + PHOTO_TABLE_NAME;
-        db.execSQL(query6);
+        //String query6 = "DROP TABLE IF EXISTS " + PHOTO_TABLE_NAME;
+        //db.execSQL(query6);
         String query7 = "DROP TABLE IF EXISTS " + TERM_TABLE_NAME;
         db.execSQL(query7);
         this.onCreate(db);
