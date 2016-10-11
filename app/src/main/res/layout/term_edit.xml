@@ -68,6 +68,13 @@
             android:id="@+id/TFtermDetailEndDate"
             android:focusable="false"/>
 
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Courses"
+            android:id="@+id/textView7"/>
+
     <ListView
             android:id="@+id/lvCourses"
             android:layout_width="match_parent"

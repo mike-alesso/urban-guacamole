@@ -14,8 +14,10 @@ import java.util.ArrayList;
  * Created by michael on 9/4/16.
  */
     public class CustomCoursesAdapter extends ArrayAdapter<Course> {
+    private ArrayList<Course> courses;
         public CustomCoursesAdapter(Context context, ArrayList<Course> courses) {
             super(context, 0, courses);
+            this.courses = courses;
         }
 
         @Override

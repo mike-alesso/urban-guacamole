@@ -316,40 +316,116 @@ public class Database extends SQLiteOpenHelper {
     //Note Table
     private static final String NOTE_TABLE_NAME = "note";
     private static final String NOTE_COLUMN_ID = "note_id";
+    private static final String NOTE_COLUMN_COURSE_ID = "course_id";
     private static final String NOTE_COLUMN_CONTENT = "content";
-    private static final String NOTE_COLUMN_COURSE_NAME = "course_name";
+    private static final String NOTE_COLUMN_NAME = "note_name";
+    private static final String NOTE_COLUMN_PHOTO = "note_photo";
 
     private static final String NOTE_TABLE_CREATE = "create table " + NOTE_TABLE_NAME +
-            "( _id INTEGER PRIMARY KEY, " + NOTE_COLUMN_ID + " INTEGER not null, " + NOTE_COLUMN_CONTENT
-            + " text not null, " + NOTE_COLUMN_COURSE_NAME + " text not null);";
+            "( _id INTEGER PRIMARY KEY, " + NOTE_COLUMN_ID + " INTEGER not null, "
+            + NOTE_COLUMN_COURSE_ID + " INTEGER not null, "
+            + NOTE_COLUMN_CONTENT + " text not null, "
+            + NOTE_COLUMN_NAME + " text not null"
+            + NOTE_COLUMN_PHOTO + " text not null);";
 
     public void insertNote(Note note) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NOTE_COLUMN_ID, note.getNoteId());
+        values.put(NOTE_COLUMN_COURSE_ID, note.getCourseId());
         values.put(NOTE_COLUMN_CONTENT, note.getNoteContent());
-        values.put(NOTE_COLUMN_COURSE_NAME, note.getCourseName());
-
+        values.put(NOTE_COLUMN_NAME, note.getCourseName());
+        values.put(NOTE_COLUMN_PHOTO, note.getPhoto());
         db.insert(NOTE_TABLE_NAME, null, values);
     }
 
-    //Photo Table
-    private static final String PHOTO_TABLE_NAME = "photo";
-    private static final String PHOTO_COLUMN_ID = "note_id";
-    private static final String PHOTO_COLUMN_FILENAME = "filename";
-
-    private static final String PHOTO_TABLE_CREATE = "create table " + PHOTO_TABLE_NAME +
-            "( _id INTEGER PRIMARY KEY, " + PHOTO_COLUMN_ID + " INTEGER not null, " + PHOTO_COLUMN_FILENAME
-            + " text not null);";
-
-    public void insertPhoto(Photo photo) {
+    public void removeNote(int i) {
         db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(PHOTO_COLUMN_ID, photo.getNoteId());
-        values.put(PHOTO_COLUMN_FILENAME, photo.getFileName());
-
-        db.insert(PHOTO_TABLE_NAME, null, values);
+        int delete = db.delete(NOTE_TABLE_NAME, "_id=" + i, null);
     }
+
+    public ArrayList<Note> getAllNotes(int courseId) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + NOTE_COLUMN_COURSE_ID + ", " + NOTE_COLUMN_NAME + ", " + NOTE_COLUMN_CONTENT + ", " + NOTE_COLUMN_PHOTO  + " from " + COURSE_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+
+        ArrayList<Note> resultList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Note tempNote = new Note();
+                DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
+                tempNote.setNoteId(cursor.getInt(0));
+                tempNote.setCourseId(cursor.getInt(1));
+                tempNote.setTitle(cursor.getString(2));
+                String noteContent = cursor.getString(3);
+                String notePhoto = cursor.getString(4);
+                if (tempNote.getCourseId() == courseId) {
+                    resultList.add(tempNote);
+                }
+            }
+            while (cursor.moveToNext());
+        }
+        db.close();
+        return resultList;
+    }
+
+    public Note GetNote(int id) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + NOTE_COLUMN_COURSE_ID + ", " + NOTE_COLUMN_CONTENT + ", " + NOTE_COLUMN_NAME + ", " + NOTE_COLUMN_PHOTO + " from " + NOTE_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Note tempNote = new Note();
+        do{
+            DateFormat format = new SimpleDateFormat("MM/dd/yy", Locale.US);
+            tempNote.setNoteId(cursor.getInt(0));
+            tempNote.setCourseId(cursor.getInt(1));
+            tempNote.setContent(cursor.getString(2));
+            tempNote.setName(cursor.getString(3));
+            tempNote.setEndDateReminder(cursor.getInt(7) == 1);
+
+            Date startTimeParsed = new Date();
+            try{
+                startTimeParsed = format.parse(startTime);
+            } catch (ParseException e) {
+                Log.e(TAG, "Parsing datetime failed", e);
+            }
+            tempNote.setStartDate(startTimeParsed);
+
+            Date endTimeParsed = new Date();
+            try{
+                endTimeParsed = format.parse(endTime);
+            } catch (ParseException e) {
+                Log.e(TAG, "Parsing datetime failed", e);
+            }
+            tempNote.setEndDate(endTimeParsed);
+
+            if(cursor.getInt(0) == id){
+                break;
+            }
+        }
+        while (cursor.moveToNext());
+        db.close();
+        return tempNote;
+    }
+
+
+    //Photo Table
+//    private static final String PHOTO_TABLE_NAME = "photo";
+//    private static final String PHOTO_COLUMN_ID = "note_id";
+//    private static final String PHOTO_COLUMN_FILENAME = "filename";
+//
+//    private static final String PHOTO_TABLE_CREATE = "create table " + PHOTO_TABLE_NAME +
+//            "( _id INTEGER PRIMARY KEY, " + PHOTO_COLUMN_ID + " INTEGER not null, " + PHOTO_COLUMN_FILENAME
+//            + " text not null);";
+//
+//    public void insertPhoto(Photo photo) {
+//        db = this.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put(PHOTO_COLUMN_ID, photo.getNoteId());
+//        values.put(PHOTO_COLUMN_FILENAME, photo.getFileName());
+//
+//        db.insert(PHOTO_TABLE_NAME, null, values);
+//    }
 
     //Term Table
     private static final String TERM_TABLE_NAME = "term";

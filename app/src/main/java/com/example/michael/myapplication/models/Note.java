@@ -1,18 +1,20 @@
 package com.example.michael.myapplication.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by michael on 9/4/16.
  */
 public class Note {
-    private int noteId;
-    private String courseName, noteContent;
+    private int noteId, courseId;
+    private String  noteContent, photo;
 
-    public void setCourseName (String courseName) {
-        this.courseName = courseName;
+    public void setCourseId (int courseId) {
+        this.courseId = courseId;
     }
 
-    public String getCourseName() {
-        return this.courseName;
+    public int getCourseId() {
+        return this.courseId;
     }
 
     public void setNoteContent (String noteContent) {
@@ -21,6 +23,16 @@ public class Note {
 
     public String getNoteContent() {
         return this.noteContent;
+    }
+
+    public void setPhotos(String photo) { this.photo = photo;}
+
+    public String getPhoto() {
+        return this.photo;
+    }
+
+    public void setNoteId (int noteId) {
+        this.noteId = noteId;
     }
 
     public int getNoteId () {

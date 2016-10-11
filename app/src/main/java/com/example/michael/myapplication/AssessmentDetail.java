@@ -29,6 +29,9 @@ public class AssessmentDetail extends Fragment {
     EditText nameTextField;
     EditText goalDateTextField;
     Switch assessmentDateReminder;
+    RadioGroup assessmentType;
+    Button objectiveButton;
+    Button performanceButton;
     //Spinner courseStatusSpinner;
 
     Assessment assessment;
@@ -68,10 +71,13 @@ public class AssessmentDetail extends Fragment {
                         Switch reminderSwitch = (Switch) rootView.findViewById(R.id.goalReminderSwitch);
                         boolean assessmentReminder = reminderSwitch.isChecked();
 
-                        Switch typeSwitch = (Switch) rootView.findViewById(R.id.assessmentTypeSwitch);
-                        boolean assessmentTypeBool = typeSwitch.isChecked();
+                        //Switch typeSwitch = (Switch) rootView.findViewById(R.id.assessmentTypeSwitch);
+                        RadioButton objectiveButton = (RadioButton) rootView.findViewById(R.id.objectiveButton);
+                        RadioButton performanceButton = (RadioButton) rootView.findViewById(R.id.performanceButton);
+
+                        //boolean assessmentTypeBool = typeSwitch.isChecked();
                         Assessment.AssessmentType assessmentType;
-                        if (assessmentTypeBool)
+                        if (objectiveButton.isChecked())
                         {
                             assessmentType = Assessment.AssessmentType.OBJECTIVE;
                         } else
@@ -135,6 +141,8 @@ public class AssessmentDetail extends Fragment {
                         goalDateCalendar.get(goalDateCalendar.DAY_OF_MONTH)).show();
             }
         });
+
+        assessmentType.check(objectiveButton.getId());
     }
 
     private void populateAssessmentDetail(int assessmentId) {
@@ -145,9 +153,11 @@ public class AssessmentDetail extends Fragment {
         nameTextField = (EditText) rootView.findViewById(R.id.TFassessmentDetailName);
         goalDateTextField = (EditText) rootView.findViewById(R.id.TFassessmentGoalDate);
         assessmentDateReminder = (Switch) rootView.findViewById(R.id.goalReminderSwitch);
+        assessmentType = (RadioGroup) rootView.findViewById(R.id.assessmentTypeGroup);
+        objectiveButton = (Button) rootView.findViewById(R.id.objectiveButton);
+        performanceButton = (Button) rootView.findViewById(R.id.performanceButton);
 
         nameTextField.setText(assessment.getAssessmentName());
-
 
         DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy", Locale.US);
 
@@ -170,8 +180,12 @@ public class AssessmentDetail extends Fragment {
         });
 
         assessmentDateReminder.setChecked(assessment.getReminder());
+        if (assessment.getType() == Assessment.AssessmentType.OBJECTIVE) {
+            assessmentType.check(objectiveButton.getId());
+        } else {
+            assessmentType.check(performanceButton.getId());
+        }
     }
-
 
     Calendar goalDateCalendar = Calendar.getInstance();
 

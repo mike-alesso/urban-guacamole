@@ -29,7 +29,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Assessment Name"
             android:id="@+id/TVviewAssessmentNameDetail"
-            android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
 
     <EditText
@@ -43,7 +42,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Goal Date"
             android:id="@+id/TVviewAssessmentGoalDetail"
-            android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
 
     <EditText
@@ -60,26 +58,29 @@
             android:text="Goal Date Reminder"
             android:id="@+id/goalReminderSwitch"
             android:checked="false"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Assessment Types"
+                android:id="@+id/textView8"/>
+        <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/assessmentTypeGroup">
 
-    <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Assessment Type"
-            android:id="@+id/assessmentTypeSwitch"
-            android:checked="false"/>
-
-    <ListView
-            android:id="@+id/lvNote"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-
-    </ListView>
-
-    <Button android:id="@+id/BnewNoteButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Note"/>
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Objective"
+                    android:id="@+id/objectiveButton"/>
+            <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Performance"
+                    android:id="@+id/performanceButton"/>
+        </RadioGroup>
 
     </LinearLayout>
 </ScrollView>

@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.example.michael.myapplication.Helpers.Database;
+import com.example.michael.myapplication.Helpers.Utility;
 import com.example.michael.myapplication.models.Assessment;
 import com.example.michael.myapplication.models.Course;
 import com.example.michael.myapplication.models.Term;
@@ -282,7 +284,17 @@ public class CourseDetail extends Fragment {
         // Attach the adapter to a ListView
         ListView listView = (ListView) rootView.findViewById(lvAssessment);
         listView.setAdapter(adapter);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("assessmentIndex", position + 1);
@@ -296,6 +308,8 @@ public class CourseDetail extends Fragment {
                 ft.commit();
             }
         });
+
+        Utility.setListViewHeightBasedOnChildren(listView);
 
         Button btn_newAssessment = (Button)rootView.findViewById(R.id.BnewAssessmentButton);
 

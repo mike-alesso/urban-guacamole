@@ -15,8 +15,11 @@ import java.util.ArrayList;
  * Created by michael on 9/4/16.
  */
     public class CustomTermsAdapter extends ArrayAdapter<Term> {
+        private ArrayList<Term> terms;
+
         public CustomTermsAdapter(Context context, ArrayList<Term> terms) {
             super(context, 0, terms);
+            this.terms = terms;
         }
 
         @Override
