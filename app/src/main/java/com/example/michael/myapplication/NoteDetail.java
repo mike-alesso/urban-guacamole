@@ -30,7 +30,8 @@ public class NoteDetail extends Fragment {
     View rootView;
     Database helper;
     EditText nameTextField;
-    ArrayList<String> picturePaths;
+    EditText contentTextField;
+    String picturePath;
 
     Note note;
     int termId = -1;
@@ -59,9 +60,9 @@ public class NoteDetail extends Fragment {
                 {
                 {
                     if (note != null) {
-                        helper.updateNote(noteId , nameTextField.getText().toString(), picturePaths);
+                        helper.updateNote(noteId , courseId, contentTextField.getText().toString(),   nameTextField.getText().toString(), picturePath);
                     } else {
-                        Note note = new Note( -1, courseId, nameTextField.getText().toString(), picturePaths);
+                        Note note = new Note( -1, courseId, contentTextField.getText().toString(), nameTextField.getText().toString(), picturePath);
                         helper.insertNote(note);
                     }
                     final FragmentTransaction ft = getFragmentManager().beginTransaction();
