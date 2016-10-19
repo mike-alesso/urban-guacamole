@@ -9,12 +9,15 @@ public class Note {
     private int noteId, courseId;
     private String  noteContent, photo, noteName;
 
+    public Note ()
+    {}
+
     public Note(int noteId, int courseId, String noteContent, String noteName, String picturePath) {
         this.noteId = noteId;
         this.courseId = courseId;
         this.noteContent = noteContent;
         this.noteName = noteName;
-        this.photo = photo;
+        this.photo = picturePath;
     }
 
     public void setCourseId (int courseId) {

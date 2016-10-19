@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:weightSum="1">
 
     <Button
             android:layout_width="wrap_content"
@@ -47,7 +48,7 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/TFnoteDetailContent"
-            android:focusable="false"/>
+            android:layout_weight="0.60"/>
 
 
     <TextView
@@ -56,6 +57,18 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Photo"
             android:id="@+id/textViewPhoto"/>
+
+    <ImageView
+            android:layout_width="180px"
+            android:layout_height="180px"
+            android:id="@+id/thumbnail_display"
+            />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Photo"
+            android:id="@+id/BaddPhotoNote"/>
 
 
 </LinearLayout>

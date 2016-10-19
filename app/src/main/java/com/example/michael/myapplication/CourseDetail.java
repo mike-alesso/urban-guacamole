@@ -13,6 +13,7 @@ import com.example.michael.myapplication.Helpers.Database;
 import com.example.michael.myapplication.Helpers.Utility;
 import com.example.michael.myapplication.models.Assessment;
 import com.example.michael.myapplication.models.Course;
+import com.example.michael.myapplication.models.Note;
 import com.example.michael.myapplication.models.Term;
 
 import java.text.DateFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.example.michael.myapplication.R.id.lvAssessment;
+import static com.example.michael.myapplication.R.id.lvNote;
 
 /**
  * Created by michael on 9/3/16.
@@ -129,6 +131,7 @@ public class CourseDetail extends Fragment {
         else populateEmptyCourse();
 
         populateAssessmentList(courseId);
+        populateNoteList(courseId);
 
         return rootView;
     }
@@ -328,4 +331,113 @@ public class CourseDetail extends Fragment {
             }
         });
     }
+
+    private void populateNoteList(final int courseId) {
+        // Construct the data source
+        helper = new Database(getActivity());
+
+        ArrayList<Note> arrayOfNotes = helper.getAllNotes(courseId);
+        // Create the adapter to convert the array to views
+        CustomNoteAdapter adapter = new CustomNoteAdapter(getActivity(), arrayOfNotes);
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) rootView.findViewById(lvNote);
+        listView.setAdapter(adapter);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("noteIndex", position + 1);
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment noteDetailFragment = new NoteDetail();
+                noteDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, noteDetailFragment);
+                ft.commit();
+            }
+        });
+
+        Utility.setListViewHeightBasedOnChildren(listView);
+
+        Button btn_newNote = (Button)rootView.findViewById(R.id.BnewNoteButton);
+
+        btn_newNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Bundle bundle = new Bundle();
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment noteDetailFragment = new NoteDetail();
+                noteDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, noteDetailFragment);
+                ft.commit();
+            }
+        });
+    }
+
+//    private void populateCourseMentorList(final int courseId) {
+//        // Construct the data source
+//        helper = new Database(getActivity());
+//
+//        ArrayList<Assessment> arrayOfAssessments = helper.getAllAssessments(courseId);
+//        // Create the adapter to convert the array to views
+//        CustomAssessmentAdapter adapter = new CustomAssessmentAdapter(getActivity(), arrayOfAssessments);
+//        // Attach the adapter to a ListView
+//        ListView listView = (ListView) rootView.findViewById(lvAssessment);
+//        listView.setAdapter(adapter);
+//        listView.setOnTouchListener(new View.OnTouchListener() {
+//            // Setting on Touch Listener for handling the touch inside ScrollView
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                // Disallow the touch request for parent scroll on touch of child view
+//                v.getParent().requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            }
+//        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("assessmentIndex", position + 1);
+//                bundle.putInt("courseIndex", courseId);
+//                bundle.putInt("termIndex", termId);
+//                //startActivity(newActivity);
+//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                Fragment assessmentDetailFragment = new AssessmentDetail();
+//                assessmentDetailFragment.setArguments(bundle);
+//                ft.replace(R.id.content_frame, assessmentDetailFragment);
+//                ft.commit();
+//            }
+//        });
+//
+//        Utility.setListViewHeightBasedOnChildren(listView);
+//
+//        Button btn_newAssessment = (Button)rootView.findViewById(R.id.BnewAssessmentButton);
+//
+//        btn_newAssessment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("courseIndex", courseId);
+//                bundle.putInt("termIndex", termId);
+//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                Fragment assessmentDetailFragment = new AssessmentDetail();
+//                assessmentDetailFragment.setArguments(bundle);
+//                ft.replace(R.id.content_frame, assessmentDetailFragment);
+//                ft.commit();
+//            }
+//        });
+//    }
 }

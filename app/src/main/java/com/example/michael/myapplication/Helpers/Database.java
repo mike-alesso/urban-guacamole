@@ -21,7 +21,7 @@ import java.util.Locale;
  */
 public class Database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "schoolStore.db";
     private static final String TAG = "storeApp";
     SQLiteDatabase db;
@@ -324,9 +324,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String NOTE_TABLE_CREATE = "create table " + NOTE_TABLE_NAME +
             "( _id INTEGER PRIMARY KEY, " + NOTE_COLUMN_ID + " INTEGER not null, "
             + NOTE_COLUMN_COURSE_ID + " INTEGER not null, "
-            + NOTE_COLUMN_CONTENT + " text not null, "
-            + NOTE_COLUMN_NAME + " text not null"
-            + NOTE_COLUMN_PHOTO + " text not null);";
+            + NOTE_COLUMN_CONTENT + " text, "
+            + NOTE_COLUMN_NAME + " text,"
+            + NOTE_COLUMN_PHOTO + " text);";
 
     public void insertNote(Note note) {
         db = this.getWritableDatabase();
@@ -357,7 +357,7 @@ public class Database extends SQLiteOpenHelper {
 
     public ArrayList<Note> getAllNotes(int courseId) {
         db = this.getReadableDatabase();
-        String query = "select _id, " + NOTE_COLUMN_COURSE_ID + ", " + NOTE_COLUMN_NAME + ", " + NOTE_COLUMN_CONTENT + ", " + NOTE_COLUMN_PHOTO  + " from " + COURSE_TABLE_NAME;
+        String query = "select _id, " + NOTE_COLUMN_COURSE_ID + ", " + NOTE_COLUMN_NAME + ", " + NOTE_COLUMN_CONTENT + ", " + NOTE_COLUMN_PHOTO  + " from " + NOTE_TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
 
         ArrayList<Note> resultList = new ArrayList<>();
