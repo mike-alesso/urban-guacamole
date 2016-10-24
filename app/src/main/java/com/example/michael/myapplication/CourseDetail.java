@@ -1,6 +1,9 @@
 package com.example.michael.myapplication;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,8 +16,8 @@ import com.example.michael.myapplication.Helpers.Database;
 import com.example.michael.myapplication.Helpers.Utility;
 import com.example.michael.myapplication.models.Assessment;
 import com.example.michael.myapplication.models.Course;
+import com.example.michael.myapplication.models.CourseMentor;
 import com.example.michael.myapplication.models.Note;
-import com.example.michael.myapplication.models.Term;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,7 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.content.Context.ALARM_SERVICE;
 import static com.example.michael.myapplication.R.id.lvAssessment;
+import static com.example.michael.myapplication.R.id.lvMentor;
 import static com.example.michael.myapplication.R.id.lvNote;
 
 /**
@@ -86,6 +91,18 @@ public class CourseDetail extends Fragment {
 
                         Switch endSwitch = (Switch) rootView.findViewById(R.id.endReminderSwitch);
                         boolean endReminder = endSwitch.isChecked();
+
+                        if (beginSwitch.isChecked()) {
+                            setBeginReminder(startDateCalendar); }
+                        else {
+                            unSetBeginReminder(startDateCalendar);
+                        }
+
+                        if (endSwitch.isChecked()) {
+                            setEndReminder(endDateCalendar); }
+                        else {
+                            unSetEndReminder(endDateCalendar);
+                        }
 
                         if (course != null) {
                             helper.updateCourse(courseId, nameTextField.getText().toString(), beginDateTextField.getText().toString(), endDateTextField.getText().toString(), Course.Status.values()[statusIndex], startReminder, endReminder);
@@ -232,7 +249,6 @@ public class CourseDetail extends Fragment {
 
         courseStatusSpinner.setSelection(course.getStatus().ordinal(), true);
     }
-
 
     Calendar startDateCalendar = Calendar.getInstance();
     Calendar endDateCalendar = Calendar.getInstance();
@@ -386,58 +402,88 @@ public class CourseDetail extends Fragment {
         });
     }
 
-//    private void populateCourseMentorList(final int courseId) {
-//        // Construct the data source
-//        helper = new Database(getActivity());
-//
-//        ArrayList<Assessment> arrayOfAssessments = helper.getAllAssessments(courseId);
-//        // Create the adapter to convert the array to views
-//        CustomAssessmentAdapter adapter = new CustomAssessmentAdapter(getActivity(), arrayOfAssessments);
-//        // Attach the adapter to a ListView
-//        ListView listView = (ListView) rootView.findViewById(lvAssessment);
-//        listView.setAdapter(adapter);
-//        listView.setOnTouchListener(new View.OnTouchListener() {
-//            // Setting on Touch Listener for handling the touch inside ScrollView
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                // Disallow the touch request for parent scroll on touch of child view
-//                v.getParent().requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("assessmentIndex", position + 1);
-//                bundle.putInt("courseIndex", courseId);
-//                bundle.putInt("termIndex", termId);
-//                //startActivity(newActivity);
-//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                Fragment assessmentDetailFragment = new AssessmentDetail();
-//                assessmentDetailFragment.setArguments(bundle);
-//                ft.replace(R.id.content_frame, assessmentDetailFragment);
-//                ft.commit();
-//            }
-//        });
-//
-//        Utility.setListViewHeightBasedOnChildren(listView);
-//
-//        Button btn_newAssessment = (Button)rootView.findViewById(R.id.BnewAssessmentButton);
-//
-//        btn_newAssessment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("courseIndex", courseId);
-//                bundle.putInt("termIndex", termId);
-//                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                Fragment assessmentDetailFragment = new AssessmentDetail();
-//                assessmentDetailFragment.setArguments(bundle);
-//                ft.replace(R.id.content_frame, assessmentDetailFragment);
-//                ft.commit();
-//            }
-//        });
-//    }
+    private void populateCourseMentorList(final int courseId) {
+        // Construct the data source
+        helper = new Database(getActivity());
+
+        ArrayList<CourseMentor> arrayOfMentors = helper.getCourseMentor(courseId);
+        // Create the adapter to convert the array to views
+        CustomCourseMentorAdapter adapter = new CustomCourseMentorAdapter(getActivity(), arrayOfMentors);
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) rootView.findViewById(lvMentor);
+        listView.setAdapter(adapter);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment courseMentorDetailFragment = new CourseMentorDetail();
+                courseMentorDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, courseMentorDetailFragment);
+                ft.commit();
+            }
+        });
+
+        Utility.setListViewHeightBasedOnChildren(listView);
+
+        Button btn_newCourseMentor = (Button)rootView.findViewById(R.id.BnewMentorButton);
+
+        btn_newCourseMentor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Bundle bundle = new Bundle();
+                bundle.putInt("courseIndex", courseId);
+                bundle.putInt("termIndex", termId);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment courseMentorDetailFragment = new AssessmentDetail();
+                courseMentorDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, courseMentorDetailFragment);
+                ft.commit();
+            }
+        });
+    }
+
+    private void setBeginReminder(Calendar calendar) {
+        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
+        myIntent.putExtra("title", course.getTitle() + "Starts today");
+        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void unSetBeginReminder(Calendar calendar) {
+        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
+        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private void setEndReminder(Calendar calendar) {
+        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
+        myIntent.putExtra("title", course.getTitle() + "Ends today");
+        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void unSetEndReminder(Calendar calendar) {
+        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
+        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
+    }
 }

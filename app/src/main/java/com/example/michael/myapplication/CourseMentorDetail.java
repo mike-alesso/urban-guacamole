@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.michael.myapplication.Helpers.Database;
 import com.example.michael.myapplication.models.Assessment;
-import com.example.michael.myapplication.models.Course;
+import com.example.michael.myapplication.models.CourseMentor;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,22 +27,18 @@ import static android.content.Context.ALARM_SERVICE;
 /**
  * Created by michael on 9/3/16.
  */
-public class AssessmentDetail extends Fragment {
+public class CourseMentorDetail extends Fragment {
 
     View rootView;
     Database helper;
     EditText nameTextField;
-    EditText goalDateTextField;
-    Switch assessmentDateReminder;
-    RadioGroup assessmentType;
-    Button objectiveButton;
-    Button performanceButton;
-    //Spinner courseStatusSpinner;
+    EditText phoneNumberTextField;
+    EditText emailAddressTextField;
 
-    Assessment assessment;
+    CourseMentor mentor;
+
     int termId = -1;
     int courseId = -1;
-    int assessmentId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,56 +46,26 @@ public class AssessmentDetail extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            assessmentId = bundle.getInt("assessmentIndex", -1);
             courseId = bundle.getInt("courseIndex", -1);
             termId = bundle.getInt("termIndex", -1);
         }
 
-        rootView = inflater.inflate(R.layout.assessment_edit, container, false);
+        rootView = inflater.inflate(R.layout.course_mentor_edit, container, false);
 
-        Button btn_saveAssessment = (Button) rootView.findViewById(R.id.BsaveAssessment);
-        btn_saveAssessment.setOnClickListener(
+        Button btn_saveMentor = (Button) rootView.findViewById(R.id.BsaveMentor);
+        btn_saveMentor.setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
                 {
                     {
-                        String myFormat = "MM/dd/yy"; //In which you need put here
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-                        Date goalDate = new Date();
-                        try {
-                            goalDate = sdf.parse(goalDateTextField.getText().toString());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
-                        Switch reminderSwitch = (Switch) rootView.findViewById(R.id.goalReminderSwitch);
-                        boolean assessmentReminder = reminderSwitch.isChecked();
 
-                        if (reminderSwitch.isChecked()) {
-                            setAssessmentReminder(goalDateCalendar); }
-                        else {
-                            unSetAssessmentReminder(goalDateCalendar);
-                        }
-
-                        //Switch typeSwitch = (Switch) rootView.findViewById(R.id.assessmentTypeSwitch);
-                        RadioButton objectiveButton = (RadioButton) rootView.findViewById(R.id.objectiveButton);
-                        RadioButton performanceButton = (RadioButton) rootView.findViewById(R.id.performanceButton);
-
-                        //boolean assessmentTypeBool = typeSwitch.isChecked();
-                        Assessment.AssessmentType assessmentType;
-                        if (objectiveButton.isChecked())
-                        {
-                            assessmentType = Assessment.AssessmentType.OBJECTIVE;
-                        } else
-                        {
-                            assessmentType = Assessment.AssessmentType.PERFORMANCE;
-                        }
-                        if (assessment != null) {
-                            helper.updateAssessment(assessmentId , nameTextField.getText().toString(), goalDateTextField.getText().toString(), assessmentReminder, assessmentType);
+                        if (mentor != null) {
+                            helper.updateMentor(assessmentId , nameTextField.getText().toString(), goalDateTextField.getText().toString(), assessmentReminder, assessmentType);
                         } else {
-                            Assessment assessment = new Assessment( -1, courseId, nameTextField.getText().toString(), goalDate, assessmentReminder, assessmentType);
-                            helper.insertAssessment(assessment);
+                            mentor = new CourseMentor( -1, courseId, nameTextField.getText().toString(), goalDate, assessmentReminder, assessmentType);
+                            helper.insertCourseMentor(mentor);
                         }
                         final FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.content_frame, new Terms());

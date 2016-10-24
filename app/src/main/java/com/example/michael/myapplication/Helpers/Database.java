@@ -347,7 +347,7 @@ public class Database extends SQLiteOpenHelper {
         cv.put(NOTE_COLUMN_NAME, name);
         cv.put(NOTE_COLUMN_PHOTO, photo);
 
-        int update = db.update(COURSE_TABLE_NAME, cv, "_id=" + noteId, null);
+        int update = db.update(NOTE_TABLE_NAME, cv, "_id=" + noteId, null);
     }
 
     public void removeNote(int i) {
