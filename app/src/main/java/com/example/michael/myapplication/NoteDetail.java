@@ -247,7 +247,7 @@ public class NoteDetail extends Fragment {
                            @Override
                            public void run() {
                                mImageView = (ImageView) rootView.findViewById(R.id.thumbnail_display);
-                               if (note.getPhoto() != null && note.getPhoto() != "")
+                               if (note != null && note.getPhoto() != null && note.getPhoto() != "")
                                {
                                    photoPath = note.getPhoto();
                                    setPic();

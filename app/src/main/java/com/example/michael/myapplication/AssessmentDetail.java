@@ -153,7 +153,7 @@ public class AssessmentDetail extends Fragment {
             }
         });
 
-        assessmentType.check(objectiveButton.getId());
+        //assessmentType.check(objectiveButton.getId());
     }
 
     private void populateAssessmentDetail(int assessmentId) {

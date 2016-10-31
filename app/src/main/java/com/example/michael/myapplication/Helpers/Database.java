@@ -21,7 +21,7 @@ import java.util.Locale;
  */
 public class Database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 13;
     private static final String DATABASE_NAME = "schoolStore.db";
     private static final String TAG = "storeApp";
     SQLiteDatabase db;
@@ -304,7 +304,7 @@ public class Database extends SQLiteOpenHelper {
             + CM_COLUMN_EMAIL + " text not null, "
             + CM_COLUMN_COURSE_ID + " INTEGER not null, "
             + CM_COLUMN_PHONE_NUMBER + " text not null, "
-            + CM_COLUMN_COURSE_NAME + " text not null);";
+            + CM_COLUMN_COURSE_NAME + " text );";
 
     public void insertCourseMentor(CourseMentor cm) {
         db = this.getWritableDatabase();
@@ -337,19 +337,20 @@ public class Database extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         String query = "select _id, " + CM_COLUMN_COURSE_ID + ", " + CM_COLUMN_NAME + ", " + CM_COLUMN_PHONE_NUMBER + ", " + CM_COLUMN_EMAIL + " from " + CM_TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
         CourseMentor tempMentor = new CourseMentor();
-        do{
-            tempMentor.setMentorId(cursor.getInt(0));
-            tempMentor.setCourseId(cursor.getInt(1));
-            tempMentor.setName(cursor.getString(2));
-            tempMentor.setPhoneNumber(cursor.getString(3));
-            tempMentor.setEmail(cursor.getString(4));
-            if(cursor.getInt(0) == id){
-                break;
+        if (cursor.moveToFirst()) {
+            do {
+                tempMentor.setMentorId(cursor.getInt(0));
+                tempMentor.setCourseId(cursor.getInt(1));
+                tempMentor.setName(cursor.getString(2));
+                tempMentor.setPhoneNumber(cursor.getString(3));
+                tempMentor.setEmail(cursor.getString(4));
+                if (cursor.getInt(0) == id) {
+                    break;
+                }
             }
+            while (cursor.moveToNext());
         }
-        while (cursor.moveToNext());
         db.close();
         return tempMentor;
     }
@@ -358,19 +359,20 @@ public class Database extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         String query = "select _id, " + CM_COLUMN_COURSE_ID + ", " + CM_COLUMN_NAME + ", " + CM_COLUMN_PHONE_NUMBER + ", " + CM_COLUMN_EMAIL + " from " + CM_TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
         CourseMentor tempMentor = new CourseMentor();
-        do{
-            tempMentor.setMentorId(cursor.getInt(0));
-            tempMentor.setCourseId(cursor.getInt(1));
-            tempMentor.setName(cursor.getString(2));
-            tempMentor.setPhoneNumber(cursor.getString(3));
-            tempMentor.setEmail(cursor.getString(4));
-            if(cursor.getInt(1) == id){
-                break;
+        if (cursor.moveToFirst()) {
+            do {
+                tempMentor.setMentorId(cursor.getInt(0));
+                tempMentor.setCourseId(cursor.getInt(1));
+                tempMentor.setName(cursor.getString(2));
+                tempMentor.setPhoneNumber(cursor.getString(3));
+                tempMentor.setEmail(cursor.getString(4));
+                if (cursor.getInt(1) == id) {
+                    break;
+                }
             }
+            while (cursor.moveToNext());
         }
-        while (cursor.moveToNext());
         db.close();
         return tempMentor;
     }

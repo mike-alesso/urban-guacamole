@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/TFcourseMentorDetailName"/>
-    </LinearLayout>
 
     <TextView
             android:layout_width="wrap_content"
@@ -63,4 +62,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/TFcourseMentorDetailEmail"/>
+    </LinearLayout>
 </ScrollView>

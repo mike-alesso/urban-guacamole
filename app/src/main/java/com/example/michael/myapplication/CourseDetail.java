@@ -144,11 +144,13 @@ public class CourseDetail extends Fragment {
         // Apply the adapter to the spinner
         staticSpinner.setAdapter(staticAdapter);
 
-        if ((courseId > 0) && (termId > 0)) populateCourseDetail(courseId);
+        if ((courseId > 0) && (termId > 0)) {
+            populateCourseDetail(courseId);
+            populateAssessmentList(courseId);
+            populateNoteList(courseId);
+            populateCourseMentorList(courseId);
+        }
         else populateEmptyCourse();
-
-        populateAssessmentList(courseId);
-        populateNoteList(courseId);
 
         return rootView;
     }
@@ -407,7 +409,9 @@ public class CourseDetail extends Fragment {
         helper = new Database(getActivity());
         ArrayList<CourseMentor> mentors = new ArrayList<>();
         CourseMentor mentor = helper.GetMentorByCourseId(courseId);
+        if (mentor.getName() != null) {
         mentors.add(mentor);
+        }
         // Create the adapter to convert the array to views
         CustomCourseMentorsAdapter adapter = new CustomCourseMentorsAdapter(getActivity(), mentors);
         // Attach the adapter to a ListView
@@ -438,9 +442,9 @@ public class CourseDetail extends Fragment {
 
         Utility.setListViewHeightBasedOnChildren(listView);
 
-        Button btn_newCourseMentor = (Button)rootView.findViewById(R.id.BnewMentorButton);
+        Button btn_newMentor = (Button)rootView.findViewById(R.id.BnewMentorButton);
 
-        btn_newCourseMentor.setOnClickListener(new View.OnClickListener() {
+        btn_newMentor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -448,9 +452,9 @@ public class CourseDetail extends Fragment {
                 bundle.putInt("courseIndex", courseId);
                 bundle.putInt("termIndex", termId);
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment courseMentorDetailFragment = new AssessmentDetail();
-                courseMentorDetailFragment.setArguments(bundle);
-                ft.replace(R.id.content_frame, courseMentorDetailFragment);
+                Fragment mentorDetailFragment = new CourseMentorDetail();
+                mentorDetailFragment.setArguments(bundle);
+                ft.replace(R.id.content_frame, mentorDetailFragment);
                 ft.commit();
             }
         });

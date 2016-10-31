@@ -27,11 +27,11 @@ import java.util.ArrayList;
             CourseMentor mentor = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.course, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.course_mentor, parent, false);
             }
             // Lookup view for data population
-            TextView tvCourseName = (TextView) convertView.findViewById(R.id.tvCourseName);
-            TextView tvCourseId = (TextView) convertView.findViewById(R.id.tvCourseId);
+            TextView tvCourseName = (TextView) convertView.findViewById(R.id.tvCourseMentorName);
+            TextView tvCourseId = (TextView) convertView.findViewById(R.id.tvCourseMentorId);
             // Populate the data into the template view using the data object
             tvCourseId.setText(String.valueOf(mentor.getCourseId()));
             tvCourseName.setText(mentor.getName());
