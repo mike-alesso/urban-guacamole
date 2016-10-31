@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.example.michael.myapplication.Helpers.Database;
-import com.example.michael.myapplication.models.Assessment;
 import com.example.michael.myapplication.models.CourseMentor;
 
 import java.text.DateFormat;
@@ -39,6 +38,7 @@ public class CourseMentorDetail extends Fragment {
 
     int termId = -1;
     int courseId = -1;
+    int mentorId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,12 +59,10 @@ public class CourseMentorDetail extends Fragment {
                 public void onClick(View v)
                 {
                     {
-
-
                         if (mentor != null) {
-                            helper.updateMentor(assessmentId , nameTextField.getText().toString(), goalDateTextField.getText().toString(), assessmentReminder, assessmentType);
+                            helper.updateMentor(mentor.getMentorId(), mentor.getCourseId(), nameTextField.getText().toString(), phoneNumberTextField.getText().toString(), emailAddressTextField.getText().toString());
                         } else {
-                            mentor = new CourseMentor( -1, courseId, nameTextField.getText().toString(), goalDate, assessmentReminder, assessmentType);
+                            mentor = new CourseMentor( -1, courseId, nameTextField.getText().toString(), phoneNumberTextField.getText().toString(), emailAddressTextField.getText().toString());
                             helper.insertCourseMentor(mentor);
                         }
                         final FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -75,12 +73,12 @@ public class CourseMentorDetail extends Fragment {
             }
         );
 
-        Button btn_deleteAssessment=(Button)rootView.findViewById(R.id.BdeleteAssessment);
-        btn_deleteAssessment.setOnClickListener(
+        Button btn_deleteMentor=(Button)rootView.findViewById(R.id.BdeleteMentor);
+        btn_deleteMentor.setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    helper.removeAssessment(assessmentId);
+                    helper.removeMentor(mentorId);
                     final FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, new Terms());
                     ft.commit();
@@ -88,117 +86,30 @@ public class CourseMentorDetail extends Fragment {
             });
 
 
-        if ((courseId > 0) && (termId > 0) && (assessmentId > 0)) populateAssessmentDetail(assessmentId);
-        else populateEmptyAssessment();
+        if ((courseId > 0) && (termId > 0) && (mentorId > 0)) populateMentorDetail(mentorId);
+        else populateEmptyMentor();
 
         return rootView;
     }
 
-    private void populateEmptyAssessment() {
+    private void populateEmptyMentor() {
         helper = new Database(getActivity());
-        nameTextField = (EditText) rootView.findViewById(R.id.TFassessmentDetailName);
-        goalDateTextField = (EditText) rootView.findViewById(R.id.TFassessmentGoalDate);
-
-        DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy", Locale.US);
-
-        DateFormat monthFormatter = new SimpleDateFormat("MM", Locale.US);
-        DateFormat dayFormatter = new SimpleDateFormat("dd", Locale.US);
-        DateFormat yearFormatter = new SimpleDateFormat("yyyy", Locale.US);
-        goalDateTextField.setText(dateFormatter.format(new Date()));
-        goalDateCalendar.set(Calendar.YEAR, Integer.parseInt(yearFormatter.format(new Date())));
-        goalDateCalendar.set(Calendar.MONTH, Integer.parseInt(monthFormatter.format(new Date())) - 1);
-        goalDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayFormatter.format(new Date())));
-        goalDateTextField.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new DatePickerDialog(getActivity(), goalDate, goalDateCalendar
-                        .get(goalDateCalendar.YEAR), goalDateCalendar.get(goalDateCalendar.MONTH),
-                        goalDateCalendar.get(goalDateCalendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-        assessmentType.check(objectiveButton.getId());
+        nameTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailName);
+        phoneNumberTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailPhone);
+        emailAddressTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailEmail);
     }
 
-    private void populateAssessmentDetail(int assessmentId) {
+    private void populateMentorDetail(int mentorId) {
         // Construct the data source
-        //Get assessment by Id
+        //Get mentor by Id
         helper = new Database(getActivity());
-        assessment = helper.GetAssessment(assessmentId);
-        nameTextField = (EditText) rootView.findViewById(R.id.TFassessmentDetailName);
-        goalDateTextField = (EditText) rootView.findViewById(R.id.TFassessmentGoalDate);
-        assessmentDateReminder = (Switch) rootView.findViewById(R.id.goalReminderSwitch);
-        assessmentType = (RadioGroup) rootView.findViewById(R.id.assessmentTypeGroup);
-        objectiveButton = (Button) rootView.findViewById(R.id.objectiveButton);
-        performanceButton = (Button) rootView.findViewById(R.id.performanceButton);
+        mentor = helper.GetMentor(mentorId);
+        nameTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailName);
+        phoneNumberTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailPhone);
+        emailAddressTextField = (EditText) rootView.findViewById(R.id.TFcourseMentorDetailEmail);
 
-        nameTextField.setText(assessment.getAssessmentName());
-
-        DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy", Locale.US);
-
-        DateFormat monthFormatter = new SimpleDateFormat("MM", Locale.US);
-        DateFormat dayFormatter = new SimpleDateFormat("dd", Locale.US);
-        DateFormat yearFormatter = new SimpleDateFormat("yyyy", Locale.US);
-        goalDateTextField.setText(dateFormatter.format(assessment.getGoalDate()));
-        goalDateCalendar.set(Calendar.YEAR, Integer.parseInt(yearFormatter.format(assessment.getGoalDate())));
-        goalDateCalendar.set(Calendar.MONTH, Integer.parseInt(monthFormatter.format(assessment.getGoalDate())) - 1);
-        goalDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayFormatter.format(assessment.getGoalDate())));
-        goalDateTextField.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new DatePickerDialog(getActivity(), goalDate, goalDateCalendar
-                        .get(goalDateCalendar.YEAR), goalDateCalendar.get(goalDateCalendar.MONTH),
-                        goalDateCalendar.get(goalDateCalendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-        assessmentDateReminder.setChecked(assessment.getReminder());
-        if (assessment.getType() == Assessment.AssessmentType.OBJECTIVE) {
-            assessmentType.check(objectiveButton.getId());
-        } else {
-            assessmentType.check(performanceButton.getId());
-        }
-    }
-
-    Calendar goalDateCalendar = Calendar.getInstance();
-
-    DatePickerDialog.OnDateSetListener goalDate = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            goalDateCalendar.set(Calendar.YEAR, year);
-            goalDateCalendar.set(Calendar.MONTH, monthOfYear);
-            goalDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateGoalLabel();
-        }
-    };
-
-    private void updateGoalLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        goalDateTextField.setText(sdf.format(goalDateCalendar.getTime()));
-    }
-
-    private void setAssessmentReminder(Calendar calendar) {
-        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
-        myIntent.putExtra("title", assessment.getAssessmentName() + "Starts today");
-        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-    }
-
-    private void unSetAssessmentReminder(Calendar calendar) {
-        Intent myIntent = new Intent(getActivity().getApplicationContext(), CourseNotifyService.class);
-        AlarmManager alarmManager = (AlarmManager)getActivity().getApplicationContext().getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getService(getActivity().getApplicationContext(), (int) (calendar.getTimeInMillis() / 1000), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmManager.cancel(pendingIntent);
+        nameTextField.setText(mentor.getName());
+        phoneNumberTextField.setText(mentor.getPhoneNumber());
+        emailAddressTextField.setText(mentor.getEmail());
     }
 }

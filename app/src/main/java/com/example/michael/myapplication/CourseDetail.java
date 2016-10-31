@@ -405,10 +405,11 @@ public class CourseDetail extends Fragment {
     private void populateCourseMentorList(final int courseId) {
         // Construct the data source
         helper = new Database(getActivity());
-
-        ArrayList<CourseMentor> arrayOfMentors = helper.getCourseMentor(courseId);
+        ArrayList<CourseMentor> mentors = new ArrayList<>();
+        CourseMentor mentor = helper.GetMentorByCourseId(courseId);
+        mentors.add(mentor);
         // Create the adapter to convert the array to views
-        CustomCourseMentorAdapter adapter = new CustomCourseMentorAdapter(getActivity(), arrayOfMentors);
+        CustomCourseMentorsAdapter adapter = new CustomCourseMentorsAdapter(getActivity(), mentors);
         // Attach the adapter to a ListView
         ListView listView = (ListView) rootView.findViewById(lvMentor);
         listView.setAdapter(adapter);

@@ -292,25 +292,87 @@ public class Database extends SQLiteOpenHelper {
 
     //Course Mentor Table
     private static final String CM_TABLE_NAME = "course_mentor";
+    private static final String CM_COLUMN_COURSE_ID = "course_id";
     private static final String CM_COLUMN_NAME = "name";
     private static final String CM_COLUMN_EMAIL = "email";
     private static final String CM_COLUMN_PHONE_NUMBER = "phone_number";
     private static final String CM_COLUMN_COURSE_NAME = "course_name";
 
     private static final String CM_TABLE_CREATE = "create table " + CM_TABLE_NAME +
-            "( _id INTEGER PRIMARY KEY, " + CM_COLUMN_NAME + " text not null, " + CM_COLUMN_EMAIL
-            + " text not null, " + CM_COLUMN_PHONE_NUMBER + " text not null, " + CM_COLUMN_COURSE_NAME +
-            " text not null);";
+            "( _id INTEGER PRIMARY KEY, "
+            + CM_COLUMN_NAME + " text not null, "
+            + CM_COLUMN_EMAIL + " text not null, "
+            + CM_COLUMN_COURSE_ID + " INTEGER not null, "
+            + CM_COLUMN_PHONE_NUMBER + " text not null, "
+            + CM_COLUMN_COURSE_NAME + " text not null);";
 
     public void insertCourseMentor(CourseMentor cm) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CM_COLUMN_NAME, cm.getName());
         values.put(CM_COLUMN_EMAIL, cm.getEmail());
+        values.put(CM_COLUMN_COURSE_ID, cm.getCourseId());
         values.put(CM_COLUMN_PHONE_NUMBER, cm.getPhoneNumber());
-        values.put(CM_COLUMN_COURSE_NAME, cm.getCourseName());
 
         db.insert(CM_TABLE_NAME, null, values);
+    }
+
+    public void updateMentor(int courseMentorId, int courseId, String name, String phoneNumber, String email) {
+        db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(CM_COLUMN_COURSE_ID, courseId); //These Fields should be your String values of actual column names
+        cv.put(CM_COLUMN_NAME, name); //
+        cv.put(CM_COLUMN_PHONE_NUMBER, phoneNumber);
+        cv.put(CM_COLUMN_EMAIL, email);
+
+        int update = db.update(CM_TABLE_NAME, cv, "_id=" + courseMentorId, null);
+    }
+
+    public void removeMentor(int i) {
+        db = this.getWritableDatabase();
+        int delete = db.delete(CM_TABLE_NAME, "_id=" + i, null);
+    }
+
+    public CourseMentor GetMentor(int id) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + CM_COLUMN_COURSE_ID + ", " + CM_COLUMN_NAME + ", " + CM_COLUMN_PHONE_NUMBER + ", " + CM_COLUMN_EMAIL + " from " + CM_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        CourseMentor tempMentor = new CourseMentor();
+        do{
+            tempMentor.setMentorId(cursor.getInt(0));
+            tempMentor.setCourseId(cursor.getInt(1));
+            tempMentor.setName(cursor.getString(2));
+            tempMentor.setPhoneNumber(cursor.getString(3));
+            tempMentor.setEmail(cursor.getString(4));
+            if(cursor.getInt(0) == id){
+                break;
+            }
+        }
+        while (cursor.moveToNext());
+        db.close();
+        return tempMentor;
+    }
+
+    public CourseMentor GetMentorByCourseId(int id) {
+        db = this.getReadableDatabase();
+        String query = "select _id, " + CM_COLUMN_COURSE_ID + ", " + CM_COLUMN_NAME + ", " + CM_COLUMN_PHONE_NUMBER + ", " + CM_COLUMN_EMAIL + " from " + CM_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        CourseMentor tempMentor = new CourseMentor();
+        do{
+            tempMentor.setMentorId(cursor.getInt(0));
+            tempMentor.setCourseId(cursor.getInt(1));
+            tempMentor.setName(cursor.getString(2));
+            tempMentor.setPhoneNumber(cursor.getString(3));
+            tempMentor.setEmail(cursor.getString(4));
+            if(cursor.getInt(1) == id){
+                break;
+            }
+        }
+        while (cursor.moveToNext());
+        db.close();
+        return tempMentor;
     }
 
     //Note Table
